@@ -5,11 +5,11 @@ from typing import ClassVar, Dict, Union
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    info_message: ClassVar[str] = ('Тип тренировки: {}; '
-                                   'Длительность: {} ч.; '
-                                   'Дистанция: {} км; '
-                                   'Ср. скорость: {} км/ч; '
-                                   'Потрачено ккал: {}.')
+    info_message: ClassVar[str] = ('Тип тренировки: {0}; '
+                                   'Длительность: {1:.3f} ч.; '
+                                   'Дистанция: {2:.3f} км; '
+                                   'Ср. скорость: {3:.3f} км/ч; '
+                                   'Потрачено ккал: {4:.3f}.')
     training_type: str
     duration: float
     distance: float
@@ -124,7 +124,6 @@ def main(training: Training) -> None:
 
 if __name__ == '__main__':
     packages = [
-        ('asd', [9000, 1, 75, 180]),
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),

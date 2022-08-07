@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing import ClassVar, Dict, Union
+from typing import ClassVar, Dict
 
 
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    info_message: ClassVar[str] = ('Тип тренировки: {0}; '
+    INFO_MESSAGE: ClassVar[str] = ('Тип тренировки: {0}; '
                                    'Длительность: {1:.3f} ч.; '
                                    'Дистанция: {2:.3f} км; '
                                    'Ср. скорость: {3:.3f} км/ч; '
@@ -18,7 +18,7 @@ class InfoMessage:
 
     def get_message(self) -> str:
         """Получить строку сообщения."""
-        return self.info_message.format(self.training_type,
+        return self.INFO_MESSAGE.format(self.training_type,
                                         self.duration,
                                         self.distance,
                                         self.speed,
@@ -104,16 +104,15 @@ class Swimming(Training):
                 * coeff_weight * self.weight)
 
 
-def read_package(workout_type: str, data: list) -> Union[Training, None]:
+def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_data: Dict[str, type] = {'SWM': Swimming,
-                                      'RUN': Running,
-                                      'WLK': SportsWalking}
+    training_data: Dict[str, type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
     if workout_type in training_data:
         training = training_data[workout_type]
         return training(*data)
-    else:
-        return None
+    raise AttributeError
 
 
 def main(training: Training) -> None:
@@ -126,12 +125,12 @@ if __name__ == '__main__':
     packages = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180]),
+        ('WLK', [9000, 1, 75, 180])
     ]
 
     for workout_type, data in packages:
-        training = read_package(workout_type, data)
-        if training is None:
-            print('Тренировка не распознана')
-        else:
+        try:
+            training = read_package(workout_type, data)
             main(training)
+        except AttributeError:
+            print('Тренировка не распознана')
